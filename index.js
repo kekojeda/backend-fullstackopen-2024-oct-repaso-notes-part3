@@ -1,10 +1,10 @@
-const Note = require('./models/note')
-
+require('dotenv').config()
 
 
 const express = require("express");
+const Note = require('./models/note')
 const cors = require('cors')
-const mongoose = require('mongoose')
+
 
 const app = express();
 
@@ -17,50 +17,24 @@ app.use(express.static('dist'))
 
 const password = process.argv[2]
 
-let notes = [
-  {
-    id: 1,
-    content: "HTML is easy",
-    important: true,
-  },
-  {
-    id: 2,
-    content: "Browser can execute only JavaScript",
-    important: false,
-  },
-  {
-    id: 3,
-    content: "GET and POST are the most important methods of HTTP protocol",
-    important: true,
-  },
-];
+// let notes = [
+//   {
+//     id: 1,
+//     content: "HTML is easy",
+//     important: true,
+//   },
+//   {
+//     id: 2,
+//     content: "Browser can execute only JavaScript",
+//     important: false,
+//   },
+//   {
+//     id: 3,
+//     content: "GET and POST are the most important methods of HTTP protocol",
+//     important: true,
+//   },
+// ];
 
-const url =
-  `mongodb+srv://kekojeda:${password}@cluster0.azazoug.mongodb.net/repaso-oct-backend-notes-part3?retryWrites=true&w=majority`
-
-mongoose.set('strictQuery',false)
-mongoose.connect(url)
-
-const noteSchema = new mongoose.Schema({
-  content: String,
-  important: Boolean,
-})
-
-noteSchema.set('toJSON', {
-  transform: (document, returnedObject) => {
-    returnedObject.id = returnedObject._id.toString()
-    delete returnedObject._id
-    delete returnedObject.__v
-  }
-})
-const Note = mongoose.model('Note', noteSchema)
-
-const generateId = () => {
-    const maxId = notes.length > 0
-      ? Math.max(...notes.map(n => n.id))
-      : 0
-    return maxId + 1
-  }
 
 app.get("/", (request, response) => {
   response.send("<h1>Hello World!</h1>");
@@ -111,6 +85,6 @@ app.post('/api/notes', (request, response) => {
 })
 
 
-const PORT = process.env.PORT || 3001
+const PORT = process.env.PORT
 app.listen(PORT);
 console.log(`Server running on port ${PORT}`);
